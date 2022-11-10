@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { format, parse, parseISO } from 'date-fns';
-import { Filtered, CreateUser } from './dtos/user.dto';
+import { ListUsers, CreateUser } from './dtos/user.dto';
 import { Prisma } from '@prisma/client';
 import { users as Users } from '@prisma/client';
 
