@@ -1,10 +1,21 @@
-import { IsString, IsNumber, ValidateIf, IsBoolean } from 'class-validator';
-export class ListUsers {
-  
-}
+import { IsString, IsNotEmpty, IsEmail } from 'class-validator';
+
 export class CreateUser {
-
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+  @IsString()
+  @IsNotEmpty()
+  rol: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }
-export class RemoveUser {
-
-} 
+export class BlockUser {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+}

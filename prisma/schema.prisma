@@ -8,12 +8,13 @@ datasource db {
 }
 
 model users {
-  user        String  @id(map: "users_pk") @db.VarChar
-  password    String  @db.VarChar
-  secret_code String? @db.VarChar
-  is_activate Boolean @default(true)
-  rol_id      Int
-  roles       roles   @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol_id")
+  secret_code   String? @db.VarChar
+  is_activate   Boolean @default(true)
+  rol_id        Int
+  user_id       String  @id(map: "users_pk") @db.VarChar
+  user_name     String  @db.VarChar
+  user_password String  @db.VarChar
+  roles         roles   @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rol_id")
 }
 
 model roles {

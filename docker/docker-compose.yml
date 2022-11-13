@@ -11,4 +11,5 @@ services:
       - POSTGRES_DB=neox_db
       - POSTGRES_USER=neox
       - POSTGRES_PASSWORD=neox
+      
   

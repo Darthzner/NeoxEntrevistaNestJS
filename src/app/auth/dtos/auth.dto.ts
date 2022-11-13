@@ -18,5 +18,23 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   rol: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
+
+export class Recovery {
+  @IsEmail()
+  @IsNotEmpty()
+  user: string;
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+  @IsString()
+  @IsNotEmpty()
+  newPassword: string;
+  @IsString()
+  @IsNotEmpty()
+  confirmNewPassword: string;
 }
 
