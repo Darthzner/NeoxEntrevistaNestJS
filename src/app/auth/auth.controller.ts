@@ -2,6 +2,7 @@ import * as bycript from 'bcrypt';
 import { Controller, Get, Post, Body, Session, HttpStatus, Res, HttpException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto, Recovery } from './dtos/auth.dto';
+import { Response } from 'express';
 @Controller('/api/auth')
 export class AuthController {
   constructor(private readonly AuthService: AuthService) {}
@@ -34,4 +35,13 @@ export class AuthController {
       throw error;
     }
   };
+
+  @Get('/hello')
+  async hello(@Res() response: Response) {
+    try {      
+        return response.status(HttpStatus.OK)
+    } catch (error) {
+      throw error;
+    }
+  }
 }

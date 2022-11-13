@@ -74,4 +74,22 @@ export class UserService {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async updateUser(body: BlockUser): Promise<any> {
+    try {
+      
+      const user_db = await this.prisma.users.update({
+        data: {
+          is_activate: false,
+        },
+        where: {
+          user_id: body.email
+        }
+      });
+      return "Usuario bloqueado con exito"
+      
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

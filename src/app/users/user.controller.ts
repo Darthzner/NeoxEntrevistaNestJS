@@ -51,4 +51,13 @@ export class UserController {
       throw error;
     }
   }
+  @Get('/update')  
+  async update() {
+    try {
+      const response = await this.userService.listUsers();      
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

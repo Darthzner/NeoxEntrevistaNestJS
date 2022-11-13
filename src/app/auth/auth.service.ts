@@ -1,4 +1,4 @@
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, OnApplicationShutdown } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto, Recovery } from './dtos/auth.dto';
@@ -7,8 +7,12 @@ import { HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnApplicationShutdown {
+  onApplicationShutdown(signal: string) {
+    console.log(signal); // e.g. "SIGINT"
+  }
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  
   async login(body: LoginDto): Promise<any> {
     try {
       const user_db = await this.prisma.users.findFirst({
@@ -21,14 +25,17 @@ export class AuthService {
               rol_name: true,
             },
           },
+          is_activate: true,
         },
         where: {
-          user_id: body.user,
-          is_activate: true,
+          user_id: body.user,          
         },
       });
       console.log(user_db)
       if (user_db) {
+        if (!user_db.is_activate){
+          throw new HttpException('Usuario se encuentra bloqueado', HttpStatus.BAD_REQUEST);
+        }
         const passwordMatch = await bcrypt.compare(
           body.password,
           user_db.user_password,
@@ -114,7 +121,7 @@ export class AuthService {
           return "Password cambiada con exito, favor vuelva a iniciar sesión"
         }
         else {
-          throw new HttpException('Los codigos deben coincidir', HttpStatus.BAD_REQUEST);
+          throw new HttpException('Codigo secreto incorrecto', HttpStatus.BAD_REQUEST);
         }
       }
       else {
@@ -122,8 +129,7 @@ export class AuthService {
       }
     } catch (error) {
       console.log(error);
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-      
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);    
       
     }
   }  
