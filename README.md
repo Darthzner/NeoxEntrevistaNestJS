@@ -1,5 +1,8 @@
 # NeoxEntrevistaNestJS
 
+Base de datos: PostgreSQl 12.0
+Api: NestJS Framework (TypeScript)
+
 ### ¿Como inicializar el proyecto?
 
     docker-compose up
