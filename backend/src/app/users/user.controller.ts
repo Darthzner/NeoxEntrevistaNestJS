@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Session, UseGuards, Request, HttpStatus, Res, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Session, UseGuards, Request, HttpStatus, Res, HttpException, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
@@ -51,11 +51,16 @@ export class UserController {
       throw error;
     }
   }
-  @Get('/update')  
-  async update() {
-    try {
-      const response = await this.userService.listUsers();      
-      return response;
+  @Patch('/update')  
+  async update(@Request() req: any, @Body() body: CreateUser) {
+    try {      
+      if (req.user.user.rol === 'ADMIN'){
+        const response = await this.userService.updateUser(body);      
+        throw new HttpException(response, HttpStatus.OK);
+      }
+      else {
+        throw new HttpException("Usuario no Admin", HttpStatus.BAD_REQUEST);
+      }
     } catch (error) {
       throw error;
     }

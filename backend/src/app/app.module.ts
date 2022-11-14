@@ -16,18 +16,20 @@ import { jwtConstants } from './auth/constants';
 import { HealthModule } from './health/health.module';
 import { HttpModule } from '@nestjs/axios';
 import { PrismaClient } from '@prisma/client';
+import { DbUtils } from './utils/db.utils';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
+    JwtModule.register({      
+      secret: '090B0C4FBA799111722B906E764690E045DD070115F4D175B1280904F9D9C6EF',
       signOptions: { expiresIn: '30m' },
     }),
     HealthModule,
     HttpModule,
   ],
+  
   controllers: [
     AuthController,
     UserController,
@@ -41,7 +43,8 @@ import { PrismaClient } from '@prisma/client';
     SendgridService,
     JwtStrategy,
     PrismaClient,
-    AppService
+    AppService,
+    DbUtils
   ],
 })
 export class AppModule {}

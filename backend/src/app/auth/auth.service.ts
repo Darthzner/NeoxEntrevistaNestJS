@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto, Recovery } from './dtos/auth.dto';
 import { users as User } from '@prisma/client';
+import { DbUtils } from '../utils/db.utils';
 import { HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
@@ -11,7 +12,7 @@ export class AuthService implements OnApplicationShutdown {
   onApplicationShutdown(signal: string) {
     console.log(signal); // e.g. "SIGINT"
   }
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(private prisma: PrismaService, private jwtService: JwtService, private dbUtils: DbUtils) {}
   
   async login(body: LoginDto): Promise<any> {
     try {
@@ -63,27 +64,16 @@ export class AuthService implements OnApplicationShutdown {
     }
   }
   async register(body: RegisterDto): Promise<User> {
-    try {
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(body.password, salt);
-      const idRol = await this.prisma.roles.findFirst({
-        select: {
-          id: true,
-        },
-        where: {
-          rol_name: {
-            contains: body.rol,
-          },
-        },
-      });
-      console.log(idRol)
-      const response = await this.prisma.users.create({
-        
+    try {      
+      const hashedPassword = await this.dbUtils.hashPassword(body.password);
+      const idRol = await this.dbUtils.findRol(body.rol)  
+          
+      const response = await this.prisma.users.create({        
         data: {
           user_id: body.user,
           user_password: hashedPassword,
           user_name: body.name,
-          rol_id: idRol.id,
+          rol_id: idRol,
           
         },
       });
